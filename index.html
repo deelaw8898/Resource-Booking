@@ -41,10 +41,11 @@
         }
 
         .container {
-            width: min(98vw, 1600px);   /* grows on big screens */
+            width: min(98vw, 1600px);
+            /* grows on big screens */
             margin: 22px auto;
             padding: 0 16px 26px;
-            }
+        }
 
 
         .topbar {
@@ -294,6 +295,32 @@
             letter-spacing: -0.02em;
         }
 
+        .bookBtn {
+            display: block;
+            margin: 12px 0 14px;
+            padding: 12px 14px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+            transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+        }
+
+        .bookBtn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
+        }
+
+        .bookBtn:active {
+            transform: translateY(0);
+        }
+
+
         .fc .fc-button {
             border-radius: 12px !important;
             border: 1px solid var(--border) !important;
@@ -388,6 +415,10 @@
 
                 <div id="resourceToggles"></div>
                 <div id="errorBox" class="error" style="display:none;"></div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzEOgF4tvf9vKROKLOKXAbacnDnUyAEUcnRUYI6clOhtwGeA/viewform?usp=publish-editor"
+                    target="_blank" rel="noopener noreferrer" class="bookBtn">
+                    + Book a Resource
+                </a>
             </div>
 
             <div id="calendar"></div>
