@@ -2,779 +2,945 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Resource Calendar</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resource Calendar</title>
 
-    <!-- FullCalendar (CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <!-- FullCalendar (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-    <style>
-        :root {
-            --bg: #f6f7fb;
-            --card: #ffffff;
-            --text: #0f172a;
-            --muted: #64748b;
-            --border: rgba(15, 23, 42, 0.10);
-            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-            --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
-            --ring: 0 0 0 4px rgba(59, 130, 246, 0.18);
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --danger: #dc2626;
-            --radius: 16px;
-        }
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15, 23, 42, 0.10);
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
+      --ring: 0 0 0 4px rgba(59, 130, 246, 0.18);
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --danger: #dc2626;
+      --radius: 16px;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            margin: 0;
-            color: var(--text);
-            background:
-                radial-gradient(1200px 600px at 20% 0%, rgba(37, 99, 235, 0.08), transparent 55%),
-                radial-gradient(900px 500px at 90% 10%, rgba(16, 185, 129, 0.08), transparent 55%),
-                var(--bg);
-        }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(37, 99, 235, 0.08), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(16, 185, 129, 0.08), transparent 55%),
+        var(--bg);
+    }
 
-        .container {
-            width: min(98vw, 1600px);
-            /* grows on big screens */
-            margin: 22px auto;
-            padding: 0 16px 26px;
-        }
+    .container {
+      width: min(98vw, 1600px);
+      margin: 22px auto;
+      padding: 0 16px 26px;
+    }
 
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
 
-        .topbar {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
+    .titleBlock h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
 
-        .titleBlock h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: -0.02em;
-        }
+    .titleBlock p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
-        .titleBlock p {
-            margin: 6px 0 0;
-            color: var(--muted);
-            font-size: 13px;
-        }
+    .wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
 
-        .wrap {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 16px;
-        }
+    /* Cards */
+    .panel,
+    #calendar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
 
-        /* Simple tooltip */
-        .tooltip {
-            position: fixed;
-            z-index: 9999;
-            max-width: 360px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.92);
-            color: #fff;
-            font-size: 12px;
-            line-height: 1.25;
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
-            pointer-events: none;
-            transform: translate(10px, 10px);
-        }
+    .panel {
+      padding: 14px;
+      overflow: hidden;
+    }
 
-        .tooltip .tt-time {
-            opacity: 0.85;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+    /* Panel header */
+    .panelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
 
-        .tooltip .tt-title {
-            font-weight: 600;
-            word-break: break-word;
-        }
+    .panelHeader strong {
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
 
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.03);
+      user-select: none;
+    }
 
-        /* Cards */
-        .panel,
-        #calendar {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-        }
+    .pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.8);
+      display: inline-block;
+    }
 
-        .panel {
-            padding: 14px;
-            overflow: hidden;
-        }
+    .btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
 
-        /* Panel header */
-        .panelHeader {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 12px;
-        }
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: transform .06s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+    }
 
-        .panelHeader strong {
-            font-size: 14px;
-            letter-spacing: -0.01em;
-        }
+    button:hover {
+      background: rgba(15, 23, 42, 0.03);
+      transform: translateY(-1px);
+    }
 
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            font-size: 12px;
-            color: var(--muted);
-            background: rgba(15, 23, 42, 0.03);
-            user-select: none;
-        }
+    button:active {
+      transform: translateY(0px);
+    }
 
-        .pill::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: rgba(37, 99, 235, 0.8);
-            display: inline-block;
-        }
+    button:focus {
+      outline: none;
+      box-shadow: var(--ring);
+      border-color: rgba(37, 99, 235, 0.35);
+    }
 
-        .btns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
+    /* Make Refresh full-width and primary-ish */
+    #refreshBtn {
+      grid-column: 1 / -1;
+      background: var(--primary);
+      color: #fff;
+      border-color: rgba(37, 99, 235, 0.45);
+    }
 
-        button {
-            appearance: none;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 12px;
-            background: #fff;
-            color: var(--text);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: transform .06s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
-        }
+    #refreshBtn:hover {
+      background: var(--primary-hover);
+    }
 
-        button:hover {
-            background: rgba(15, 23, 42, 0.03);
-            transform: translateY(-1px);
-        }
+    .bookBtn {
+      display: block;
+      margin: 12px 0 14px;
+      padding: 12px 14px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+      transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+    }
 
-        button:active {
-            transform: translateY(0px);
-        }
+    .bookBtn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
+    }
 
-        button:focus {
-            outline: none;
-            box-shadow: var(--ring);
-            border-color: rgba(37, 99, 235, 0.35);
-        }
+    .bookBtn:active {
+      transform: translateY(0);
+    }
 
-        /* Make Refresh full-width and primary-ish */
-        #refreshBtn {
-            grid-column: 1 / -1;
-            background: var(--primary);
-            color: #fff;
-            border-color: rgba(37, 99, 235, 0.45);
-        }
+    /* Toggle list */
+    #resourceToggles {
+      margin-top: 12px;
+      max-height: calc(100vh - 310px);
+      overflow: auto;
+      padding-right: 6px;
+    }
 
-        #refreshBtn:hover {
-            background: var(--primary-hover);
-        }
+    /* nicer scrollbar (webkit) */
+    #resourceToggles::-webkit-scrollbar {
+      width: 10px;
+    }
 
-        /* Toggle list */
-        #resourceToggles {
-            margin-top: 12px;
-            max-height: calc(100vh - 260px);
-            overflow: auto;
-            padding-right: 6px;
-        }
+    #resourceToggles::-webkit-scrollbar-thumb {
+      background: rgba(15, 23, 42, 0.12);
+      border-radius: 999px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
 
-        /* nicer scrollbar (webkit) */
-        #resourceToggles::-webkit-scrollbar {
-            width: 10px;
-        }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 10px 10px;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      transition: background .12s ease, border-color .12s ease;
+    }
 
-        #resourceToggles::-webkit-scrollbar-thumb {
-            background: rgba(15, 23, 42, 0.12);
-            border-radius: 999px;
-            border: 3px solid transparent;
-            background-clip: content-box;
-        }
+    .row:hover {
+      background: rgba(15, 23, 42, 0.03);
+      border-color: rgba(15, 23, 42, 0.06);
+    }
 
-        .row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 8px 0;
-            padding: 10px 10px;
-            border: 1px solid transparent;
-            border-radius: 14px;
-            transition: background .12s ease, border-color .12s ease;
-        }
+    .row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
 
-        .row:hover {
-            background: rgba(15, 23, 42, 0.03);
-            border-color: rgba(15, 23, 42, 0.06);
-        }
+    .row label {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.1;
+      font-size: 13px;
+      color: rgba(15, 23, 42, 0.86);
+      user-select: none;
+    }
 
-        .row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            border-radius: 6px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
 
-        .row label {
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            line-height: 1.1;
-            font-size: 13px;
-            color: rgba(15, 23, 42, 0.86);
-            user-select: none;
-        }
+    .error {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      background: rgba(220, 38, 38, 0.06);
+      color: var(--danger);
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
 
-        .muted {
-            color: var(--muted);
-            font-size: 12px;
-        }
+    /* Calendar container */
+    #calendar {
+      padding: 14px;
+      min-height: 560px;
+    }
 
-        .error {
-            margin-top: 12px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(220, 38, 38, 0.25);
-            background: rgba(220, 38, 38, 0.06);
-            color: var(--danger);
-            font-size: 12px;
-            white-space: pre-wrap;
-        }
+    /* FullCalendar theme tweaks */
+    .fc {
+      --fc-border-color: rgba(15, 23, 42, 0.10);
+      --fc-page-bg-color: transparent;
+      --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+      --fc-small-font-size: 0.84em;
+      --fc-event-border-color: transparent;
+      --fc-event-text-color: #fff;
+      --fc-event-bg-color: var(--primary);
+      --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.10);
+    }
 
-        /* Calendar container */
-        #calendar {
-            padding: 14px;
-            min-height: 560px;
-        }
+    .fc .fc-toolbar-title {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
 
-        /* FullCalendar theme tweaks */
-        .fc {
-            --fc-border-color: rgba(15, 23, 42, 0.10);
-            --fc-page-bg-color: transparent;
-            --fc-today-bg-color: rgba(37, 99, 235, 0.08);
-            --fc-small-font-size: 0.84em;
-            --fc-event-border-color: transparent;
-            --fc-event-text-color: #fff;
-            --fc-event-bg-color: var(--primary);
-            --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.10);
-        }
+    .fc .fc-toolbar {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-        .fc .fc-toolbar-title {
-            font-size: 18px;
-            letter-spacing: -0.02em;
-        }
+    .fc .fc-toolbar-chunk {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
 
-        .bookBtn {
-            display: block;
-            margin: 12px 0 14px;
-            padding: 12px 14px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #fff;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
-            transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
-        }
+    .fc .fc-button {
+      border-radius: 12px !important;
+      border: 1px solid var(--border) !important;
+      background: #fff !important;
+      color: rgba(15, 23, 42, 0.85) !important;
+      padding: 8px 10px !important;
+      font-weight: 600 !important;
+      box-shadow: none !important;
+      transition: background .15s ease, transform .06s ease, border-color .15s ease;
+    }
 
-        .bookBtn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.05);
-            box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
-        }
+    .fc .fc-button:hover {
+      background: rgba(15, 23, 42, 0.04) !important;
+      transform: translateY(-1px);
+    }
 
-        .bookBtn:active {
-            transform: translateY(0);
-        }
+    .fc .fc-button:active {
+      transform: translateY(0px);
+    }
 
+    .fc .fc-button-primary:not(:disabled).fc-button-active {
+      background: rgba(37, 99, 235, 0.10) !important;
+      border-color: rgba(37, 99, 235, 0.25) !important;
+      color: rgba(15, 23, 42, 0.9) !important;
+    }
 
-        .fc .fc-button {
-            border-radius: 12px !important;
-            border: 1px solid var(--border) !important;
-            background: #fff !important;
-            color: rgba(15, 23, 42, 0.85) !important;
-            padding: 8px 10px !important;
-            font-weight: 600 !important;
-            box-shadow: none !important;
-            transition: background .15s ease, transform .06s ease, border-color .15s ease;
-        }
+    .fc .fc-button-primary:focus {
+      box-shadow: var(--ring) !important;
+    }
 
-        .fc .fc-button:hover {
-            background: rgba(15, 23, 42, 0.04) !important;
-            transform: translateY(-1px);
-        }
+    /* Make events look like pills */
+    .fc .fc-event,
+    .fc .fc-daygrid-event {
+      border-radius: 999px;
+      padding: 2px 6px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    }
 
-        .fc .fc-button:active {
-            transform: translateY(0px);
-        }
+    .fc .fc-timegrid-event {
+      border-radius: 12px;
+      padding: 4px 6px;
+    }
 
-        .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background: rgba(37, 99, 235, 0.10) !important;
-            border-color: rgba(37, 99, 235, 0.25) !important;
-            color: rgba(15, 23, 42, 0.9) !important;
-        }
+    /* Slightly soften day cell headers */
+    .fc .fc-col-header-cell-cushion {
+      padding: 10px 0;
+      color: rgba(15, 23, 42, 0.65);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
 
-        .fc .fc-button-primary:focus {
-            box-shadow: var(--ring) !important;
-        }
+    /* Simple tooltip */
+    .tooltip {
+      position: fixed;
+      z-index: 9999;
+      max-width: 360px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.25;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+      pointer-events: none;
+      transform: translate(10px, 10px);
+    }
 
-        /* Make events look like pills */
-        .fc .fc-event,
-        .fc .fc-daygrid-event {
-            border-radius: 999px;
-            padding: 2px 6px;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
-        }
+    .tooltip .tt-time {
+      opacity: 0.85;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
 
-        .fc .fc-timegrid-event {
-            border-radius: 12px;
-            padding: 4px 6px;
-        }
+    .tooltip .tt-title {
+      font-weight: 600;
+      word-break: break-word;
+    }
 
-        /* Slightly soften day cell headers */
-        .fc .fc-col-header-cell-cushion {
-            padding: 10px 0;
-            color: rgba(15, 23, 42, 0.65);
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-        }
+    /* Hamburger + mobile drawer */
+    .hamburger {
+      display: none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 800;
+      color: rgba(15, 23, 42, 0.85);
+      cursor: pointer;
+      white-space: nowrap;
+      align-items: center;
+      gap: 8px;
+    }
 
-        /* Responsive */
-        @media (max-width: 1000px) {
-            .wrap {
-                grid-template-columns: 1fr;
-            }
+    .hamburger:hover {
+      background: rgba(15, 23, 42, 0.03);
+    }
 
-            #resourceToggles {
-                max-height: 280px;
-            }
+    .iconBtn {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-weight: 900;
+    }
 
-            #calendar {
-                min-height: 520px;
-            }
-        }
-    </style>
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      z-index: 10000;
+    }
+
+    .overlay.open {
+      display: block;
+    }
+
+    .drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: min(92vw, 420px);
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+      padding: 12px;
+      transform: translateX(100%);
+      transition: transform .2s ease;
+    }
+
+    .overlay.open .drawer {
+      transform: translateX(0);
+    }
+
+    .drawerHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 6px 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .drawerBody {
+      height: calc(100% - 60px);
+      overflow: auto;
+    }
+
+    /* Mobile behavior */
+    @media (max-width: 900px) {
+      .container {
+        width: 100%;
+        margin: 14px auto;
+        padding: 0 12px 18px;
+      }
+
+      .wrap {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Hide the panel in layout; it will be moved to drawer via JS */
+      #filtersPanel {
+        display: none;
+      }
+
+      .hamburger {
+        display: inline-flex;
+      }
+
+      #calendar {
+        padding: 10px;
+        min-height: 520px;
+      }
+
+      .tooltip {
+        max-width: 260px;
+        font-size: 11px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="topbar">
-            <div class="titleBlock">
-                <h1>Resource Calendar</h1>
-                <p>Filter resources on the left. Click an event to open it in Google Calendar.</p>
-            </div>
-        </div>
+  <div class="container">
+    <div class="topbar">
+      <div class="titleBlock">
+        <h1>Resource Calendar</h1>
+        <p>Filter resources. Click an event to open it in Google Calendar.</p>
+      </div>
 
-        <div class="wrap">
-            <div class="panel">
-                <div class="panelHeader">
-                    <strong>Resources</strong>
-                    <span id="countPill" class="pill">0 shown</span>
-                </div>
-
-                <div class="btns">
-                    <button id="selectAllBtn" type="button">Select all</button>
-                    <button id="selectNoneBtn" type="button">Select none</button>
-                    <button id="refreshBtn" type="button">Refresh</button>
-                </div>
-
-                <div id="resourceToggles"></div>
-                <div id="errorBox" class="error" style="display:none;"></div>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzEOgF4tvf9vKROKLOKXAbacnDnUyAEUcnRUYI6clOhtwGeA/viewform?usp=publish-editor"
-                    target="_blank" rel="noopener noreferrer" class="bookBtn">
-                    + Book a Resource
-                </a>
-            </div>
-
-            <div id="calendar"></div>
-        </div>
+      <button id="openFiltersBtn" class="hamburger" type="button" aria-label="Open filters">
+        ☰ Filters
+      </button>
     </div>
 
-    <script>
-        /*****************************************************************
-         * CONFIG:
-         *****************************************************************/
-        const GOOGLE_API_KEY = "AIzaSyCmlYXwSAPkVqB5_a3JHdDjmzGsBNHVOqE";
-        const GOOGLE_CALENDAR_ID = "asstgs.saskbaiturrahmat@ahmadiyya.ca";
+    <div class="wrap">
+      <div id="filtersPanel" class="panel">
+        <div class="panelHeader">
+          <strong>Resources</strong>
+          <span id="countPill" class="pill">0 shown</span>
+        </div>
 
-        /*****************************************************************
-         * RESOURCE DEFINITIONS (fixed list) + COLORS
-         *****************************************************************/
-        const RESOURCES = [
-            "BR - Lajna Prayer Hall",
-            "BR - Lajna Classroom",
-            "BR - Lajna Kitchen",
-            "BR - Lajna Kids Room",
-            "BR - Lajna Lobby",
-            "BR - Gym",
-            "BR - Library",
-            "BR - Board Room",
-            "BR - Outside Kitchen",
-            "BR - Men's Prayer Hall",
-            "BR - Men's Kitchen",
-            "BA - Lajna Prayer Hall",
-            "BA - Men's Prayer Hall",
-        ];
+        <div class="btns">
+          <button id="selectAllBtn" type="button">Select all</button>
+          <button id="selectNoneBtn" type="button">Select none</button>
+          <button id="refreshBtn" type="button">Refresh</button>
+        </div>
 
-        // 13 distinct-ish colors
-        const COLOR_PALETTE = [
-            "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
-            "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
-            "#0f766e", "#b45309", "#4338ca",
-        ];
+        <div id="resourceToggles"></div>
+        <div id="errorBox" class="error" style="display:none;"></div>
 
-        // Map each resource -> a color (stable)
-        const RESOURCE_COLOR = Object.fromEntries(
-            RESOURCES.map((r, i) => [r, COLOR_PALETTE[i % COLOR_PALETTE.length]])
-        );
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzEOgF4tvf9vKROKLOKXAbacnDnUyAEUcnRUYI6clOhtwGeA/viewform?usp=publish-editor"
+          target="_blank" rel="noopener noreferrer" class="bookBtn">
+          + Book a Resource
+        </a>
+      </div>
 
-        /*****************************************************************
-         * Helpers
-         *****************************************************************/
-        let activeTooltipEl = null;
+      <div id="calendar"></div>
+    </div>
+  </div>
 
-        function formatTimeRange(event) {
-            if (event.allDay) return "All day";
+  <!-- Mobile drawer overlay -->
+  <div id="filtersOverlay" class="overlay" aria-hidden="true">
+    <div class="drawer" role="dialog" aria-modal="true" aria-label="Filters">
+      <div class="drawerHeader">
+        <strong>Filters</strong>
+        <button id="closeFiltersBtn" class="iconBtn" type="button" aria-label="Close filters">✕</button>
+      </div>
+      <div id="drawerBody" class="drawerBody"></div>
+    </div>
+  </div>
 
-            const start = event.start;
-            const end = event.end;
+  <script>
+    /*****************************************************************
+     * CONFIG:
+     *****************************************************************/
+    const GOOGLE_API_KEY = "AIzaSyCmlYXwSAPkVqB5_a3JHdDjmzGsBNHVOqE";
+    const GOOGLE_CALENDAR_ID = "asstgs.saskbaiturrahmat@ahmadiyya.ca";
 
-            const opts = { hour: "numeric", minute: "2-digit" };
-            const s = start ? start.toLocaleTimeString([], opts) : "";
-            const e = end ? end.toLocaleTimeString([], opts) : "";
+    /*****************************************************************
+     * RESOURCE DEFINITIONS (fixed list) + COLORS
+     *****************************************************************/
+    const RESOURCES = [
+      "BR - Lajna Prayer Hall",
+      "BR - Lajna Classroom",
+      "BR - Lajna Kitchen",
+      "BR - Lajna Kids Room",
+      "BR - Lajna Lobby",
+      "BR - Gym",
+      "BR - Library",
+      "BR - Board Room",
+      "BR - Outside Kitchen",
+      "BR - Men's Prayer Hall",
+      "BR - Men's Kitchen",
+      "BA - Lajna Prayer Hall",
+      "BA - Men's Prayer Hall",
+    ];
 
-            // If end missing, just show start
-            return e ? `${s} – ${e}` : s;
+    // 13 distinct-ish colors
+    const COLOR_PALETTE = [
+      "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+      "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
+      "#0f766e", "#b45309", "#4338ca",
+    ];
+
+    // Map each resource -> a color (stable)
+    const RESOURCE_COLOR = Object.fromEntries(
+      RESOURCES.map((r, i) => [r, COLOR_PALETTE[i % COLOR_PALETTE.length]])
+    );
+
+    /*****************************************************************
+     * Helpers
+     *****************************************************************/
+    let activeTooltipEl = null;
+
+    function formatTimeRange(event) {
+      if (event.allDay) return "All day";
+
+      const start = event.start;
+      const end = event.end;
+
+      const opts = { hour: "numeric", minute: "2-digit" };
+      const s = start ? start.toLocaleTimeString([], opts) : "";
+      const e = end ? end.toLocaleTimeString([], opts) : "";
+
+      return e ? `${s} – ${e}` : s;
+    }
+
+    function showTooltip(info, jsEvent) {
+      hideTooltip();
+
+      const el = document.createElement("div");
+      el.className = "tooltip";
+
+      const time = formatTimeRange(info.event);
+      const title = info.event.title || "";
+
+      el.innerHTML = `
+        <div class="tt-time">${time}</div>
+        <div class="tt-title">${escapeHtml(title)}</div>
+      `;
+
+      document.body.appendChild(el);
+      activeTooltipEl = el;
+
+      moveTooltip(jsEvent);
+    }
+
+    function moveTooltip(jsEvent) {
+      if (!activeTooltipEl) return;
+
+      const pad = 14;
+      const w = activeTooltipEl.offsetWidth;
+      const h = activeTooltipEl.offsetHeight;
+
+      let x = jsEvent.clientX + pad;
+      let y = jsEvent.clientY + pad;
+
+      if (x + w > window.innerWidth - 8) x = jsEvent.clientX - w - pad;
+      if (y + h > window.innerHeight - 8) y = jsEvent.clientY - h - pad;
+
+      activeTooltipEl.style.left = `${x}px`;
+      activeTooltipEl.style.top = `${y}px`;
+    }
+
+    function hideTooltip() {
+      if (activeTooltipEl) {
+        activeTooltipEl.remove();
+        activeTooltipEl = null;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getColorForResource(r) {
+      if (!r) return null;
+      if (RESOURCE_COLOR[r]) return RESOURCE_COLOR[r];
+
+      let hash = 0;
+      for (let i = 0; i < r.length; i++) hash = (hash * 31 + r.charCodeAt(i)) >>> 0;
+      return COLOR_PALETTE[hash % COLOR_PALETTE.length];
+    }
+
+    function toIso(d) {
+      return d.toISOString();
+    }
+
+    function parseResource(summary) {
+      const s = (summary || "").trim();
+
+      // Rule: exactly one pipe in the title. Resource is left of pipe.
+      const parts = s.split("|");
+      if (parts.length === 2) {
+        const resource = parts[0].trim();
+        const title = parts[1].trim() || "(No title)";
+        return { resource, title };
+      }
+
+      return { resource: null, title: s || "(No title)" };
+    }
+
+    function googleEventsUrl(timeMinIso, timeMaxIso) {
+      const base = "https://www.googleapis.com/calendar/v3/calendars/" + encodeURIComponent(GOOGLE_CALENDAR_ID) + "/events";
+      const params = new URLSearchParams({
+        key: GOOGLE_API_KEY,
+        timeMin: timeMinIso,
+        timeMax: timeMaxIso,
+        singleEvents: "true",
+        orderBy: "startTime",
+        maxResults: "2500",
+      });
+      return `${base}?${params.toString()}`;
+    }
+
+    async function fetchGoogleEvents(timeMin, timeMax) {
+      const url = googleEventsUrl(toIso(timeMin), toIso(timeMax));
+      const res = await fetch(url);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Google API error (${res.status}).\n${text}`);
+      }
+      const data = await res.json();
+      return data.items || [];
+    }
+
+    /*****************************************************************
+     * State
+     *****************************************************************/
+    const state = {
+      selectedResources: new Set(),
+      availableResources: [],
+      cachedEvents: [],
+      didInitSelection: false,
+    };
+
+    function setError(msg) {
+      const el = document.getElementById("errorBox");
+      if (!msg) {
+        el.textContent = "";
+        el.style.display = "none";
+        return;
+      }
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+
+    function updateCountPill(shownCount) {
+      document.getElementById("countPill").textContent = `${shownCount} shown`;
+    }
+
+    function renderToggles() {
+      const holder = document.getElementById("resourceToggles");
+      holder.innerHTML = "";
+
+      if (state.availableResources.length === 0) {
+        holder.innerHTML = `<div class="muted" style="padding:10px 2px;">No resources found in this date range.</div>`;
+        return;
+      }
+
+      for (const r of state.availableResources) {
+        const id = "res_" + r.replace(/\W+/g, "_");
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id = id;
+        cb.checked = state.selectedResources.has(r);
+
+        cb.addEventListener("change", () => {
+          if (cb.checked) state.selectedResources.add(r);
+          else state.selectedResources.delete(r);
+          calendar.refetchEvents();
+        });
+
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+
+        const dot = document.createElement("span");
+        dot.style.width = "10px";
+        dot.style.height = "10px";
+        dot.style.borderRadius = "999px";
+        dot.style.display = "inline-block";
+        dot.style.background = getColorForResource(r);
+        dot.style.marginRight = "6px";
+
+        label.appendChild(dot);
+        label.appendChild(document.createTextNode(r));
+
+        row.appendChild(cb);
+        row.appendChild(label);
+        holder.appendChild(row);
+      }
+    }
+
+    function buildResourceListFromCached() {
+      state.availableResources = [...RESOURCES];
+
+      if (!state.didInitSelection) {
+        for (const r of state.availableResources) state.selectedResources.add(r);
+        state.didInitSelection = true;
+      }
+    }
+
+    function toFullCalendarEvent(googleItem) {
+      const summary = googleItem.summary || "(No title)";
+      const { resource, title } = parseResource(summary);
+
+      const start = googleItem.start?.dateTime || googleItem.start?.date;
+      const end = googleItem.end?.dateTime || googleItem.end?.date;
+
+      const displayTitle = resource ? `${resource} - ${title}` : summary;
+      const color = getColorForResource(resource);
+
+      return {
+        id: googleItem.id,
+        title: displayTitle,
+        start,
+        end,
+        allDay: !!googleItem.start?.date,
+        backgroundColor: color || undefined,
+        borderColor: color || undefined,
+        textColor: color ? "#ffffff" : undefined,
+        extendedProps: {
+          resource,
+          rawTitle: title,
+          htmlLink: googleItem.htmlLink || null,
         }
+      };
+    }
 
-        function showTooltip(info, jsEvent) {
-            hideTooltip();
+    /*****************************************************************
+     * FullCalendar init
+     *****************************************************************/
+    const calendarEl = document.getElementById("calendar");
 
-            const el = document.createElement("div");
-            el.className = "tooltip";
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+      },
+      height: "auto",
+      nowIndicator: true,
 
-            const time = formatTimeRange(info.event);
-            const title = info.event.title || "";
+      eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
+      eventMouseLeave: function () { hideTooltip(); },
+      eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
 
-            el.innerHTML = `
-    <div class="tt-time">${time}</div>
-    <div class="tt-title">${escapeHtml(title)}</div>
-  `;
+      eventClick: function (info) {
+        const link = info.event.extendedProps.htmlLink;
+        if (link) window.open(link, "_blank");
+      },
 
-            document.body.appendChild(el);
-            activeTooltipEl = el;
+      events: async function (fetchInfo, successCallback, failureCallback) {
+        try {
+          setError("");
 
-            moveTooltip(jsEvent);
-        }
+          state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
 
-        function moveTooltip(jsEvent) {
-            if (!activeTooltipEl) return;
+          buildResourceListFromCached();
+          renderToggles();
 
-            const pad = 14;
-            const w = activeTooltipEl.offsetWidth;
-            const h = activeTooltipEl.offsetHeight;
-
-            let x = jsEvent.clientX + pad;
-            let y = jsEvent.clientY + pad;
-
-            // prevent going off-screen
-            if (x + w > window.innerWidth - 8) x = jsEvent.clientX - w - pad;
-            if (y + h > window.innerHeight - 8) y = jsEvent.clientY - h - pad;
-
-            activeTooltipEl.style.left = `${x}px`;
-            activeTooltipEl.style.top = `${y}px`;
-        }
-
-        function hideTooltip() {
-            if (activeTooltipEl) {
-                activeTooltipEl.remove();
-                activeTooltipEl = null;
-            }
-        }
-
-        // Prevent HTML injection in tooltip
-        function escapeHtml(str) {
-            return String(str)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
-
-        function getColorForResource(r) {
-            if (!r) return null;
-            if (RESOURCE_COLOR[r]) return RESOURCE_COLOR[r];
-
-            // deterministic fallback color for unknown resources
-            let hash = 0;
-            for (let i = 0; i < r.length; i++) hash = (hash * 31 + r.charCodeAt(i)) >>> 0;
-            return COLOR_PALETTE[hash % COLOR_PALETTE.length];
-        }
-
-        function toIso(d) {
-            // FullCalendar gives Date objects; Google API wants ISO.
-            return d.toISOString();
-        }
-
-        function parseResource(summary) {
-            const s = (summary || "").trim();
-
-            // Rule: exactly one pipe in the title. Resource is left of pipe.
-            const parts = s.split("|");
-            if (parts.length === 2) {
-                const resource = parts[0].trim();
-                const title = parts[1].trim() || "(No title)";
-                return { resource, title };
-            }
-
-            // If no pipe or unexpected format, treat as "unknown resource"
-            return { resource: null, title: s || "(No title)" };
-        }
-
-        function googleEventsUrl(timeMinIso, timeMaxIso) {
-            const base = "https://www.googleapis.com/calendar/v3/calendars/" + encodeURIComponent(GOOGLE_CALENDAR_ID) + "/events";
-            const params = new URLSearchParams({
-                key: GOOGLE_API_KEY,
-                timeMin: timeMinIso,
-                timeMax: timeMaxIso,
-                singleEvents: "true",
-                orderBy: "startTime",
-                maxResults: "2500",
+          const fcEvents = state.cachedEvents
+            .map(toFullCalendarEvent)
+            .filter(e => {
+              const r = e.extendedProps.resource;
+              if (!r) return state.selectedResources.size > 0;
+              return state.selectedResources.has(r);
             });
-            return `${base}?${params.toString()}`;
+
+          updateCountPill(state.selectedResources.size);
+          successCallback(fcEvents);
+        } catch (err) {
+          setError(err.message || String(err));
+          failureCallback(err);
         }
+      }
+    });
 
-        async function fetchGoogleEvents(timeMin, timeMax) {
-            const url = googleEventsUrl(toIso(timeMin), toIso(timeMax));
-            const res = await fetch(url);
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(`Google API error (${res.status}).\n${text}`);
-            }
-            const data = await res.json();
-            return data.items || [];
+    calendar.render();
+
+    /*****************************************************************
+     * Buttons
+     *****************************************************************/
+    document.getElementById("selectAllBtn").addEventListener("click", () => {
+      for (const r of state.availableResources) state.selectedResources.add(r);
+      renderToggles();
+      calendar.refetchEvents();
+    });
+
+    document.getElementById("selectNoneBtn").addEventListener("click", () => {
+      state.selectedResources.clear();
+      renderToggles();
+      calendar.refetchEvents();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", () => {
+      calendar.refetchEvents();
+    });
+
+    /*****************************************************************
+     * Mobile Filters Drawer (layout only; does not touch calendar logic)
+     *****************************************************************/
+    const overlay = document.getElementById("filtersOverlay");
+    const openBtn = document.getElementById("openFiltersBtn");
+    const closeBtn = document.getElementById("closeFiltersBtn");
+    const filtersPanel = document.getElementById("filtersPanel");
+    const drawerBody = document.getElementById("drawerBody");
+
+    // Track where the panel belongs in desktop layout
+    const originalParent = filtersPanel.parentElement;
+    const originalNextSibling = filtersPanel.nextElementSibling;
+
+    function isMobile() {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function ensurePanelLocation() {
+      if (isMobile()) {
+        // Move panel into drawer on mobile
+        if (filtersPanel.parentElement !== drawerBody) {
+          drawerBody.appendChild(filtersPanel);
         }
-
-        /*****************************************************************
-         * State
-         *****************************************************************/
-        const state = {
-            selectedResources: new Set(),
-            availableResources: [],
-            cachedEvents: [],
-            didInitSelection: false,
-        };
-
-        function setError(msg) {
-            const el = document.getElementById("errorBox");
-            if (!msg) {
-                el.textContent = "";
-                el.style.display = "none";
-                return;
-            }
-            el.textContent = msg;
-            el.style.display = "block";
+      } else {
+        // Move panel back on desktop
+        if (filtersPanel.parentElement !== originalParent) {
+          if (originalNextSibling) originalParent.insertBefore(filtersPanel, originalNextSibling);
+          else originalParent.appendChild(filtersPanel);
         }
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+    }
 
-        function updateCountPill(shownCount) {
-            document.getElementById("countPill").textContent = `${shownCount} shown`;
-        }
+    function openDrawer() {
+      ensurePanelLocation();
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
 
-        function renderToggles() {
-            const holder = document.getElementById("resourceToggles");
-            holder.innerHTML = "";
+    function closeDrawer() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
 
-            if (state.availableResources.length === 0) {
-                holder.innerHTML = `<div class="muted" style="padding:10px 2px;">No resources found in this date range.</div>`;
-                return;
-            }
+    openBtn.addEventListener("click", openDrawer);
+    closeBtn.addEventListener("click", closeDrawer);
 
-            for (const r of state.availableResources) {
-                const id = "res_" + r.replace(/\W+/g, "_");
-                const row = document.createElement("div");
-                row.className = "row";
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeDrawer();
+    });
 
-                const cb = document.createElement("input");
-                cb.type = "checkbox";
-                cb.id = id;
-                cb.checked = state.selectedResources.has(r);
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
 
-                cb.addEventListener("change", () => {
-                    if (cb.checked) state.selectedResources.add(r);
-                    else state.selectedResources.delete(r);
-                    calendar.refetchEvents();
-                });
-
-                const label = document.createElement("label");
-                label.setAttribute("for", id);
-
-                const dot = document.createElement("span");
-                dot.style.width = "10px";
-                dot.style.height = "10px";
-                dot.style.borderRadius = "999px";
-                dot.style.display = "inline-block";
-                dot.style.background = getColorForResource(r);
-                dot.style.marginRight = "6px";
-
-                label.appendChild(dot);
-                label.appendChild(document.createTextNode(r));
-
-                row.appendChild(cb);
-                row.appendChild(label);
-                holder.appendChild(row);
-            }
-        }
-
-        function buildResourceListFromCached() {
-            state.availableResources = [...RESOURCES];
-
-            if (!state.didInitSelection) {
-                for (const r of state.availableResources) state.selectedResources.add(r);
-                state.didInitSelection = true;
-            }
-        }
-
-        function toFullCalendarEvent(googleItem) {
-            const summary = googleItem.summary || "(No title)";
-            const { resource, title } = parseResource(summary);
-
-            const start = googleItem.start?.dateTime || googleItem.start?.date;
-            const end = googleItem.end?.dateTime || googleItem.end?.date;
-
-            const displayTitle = resource ? `${resource} - ${title}` : summary;
-            const color = getColorForResource(resource);
-
-            return {
-                id: googleItem.id,
-                title: displayTitle,
-                start,
-                end,
-                allDay: !!googleItem.start?.date,
-                backgroundColor: color || undefined,
-                borderColor: color || undefined,
-                textColor: color ? "#ffffff" : undefined,
-                extendedProps: {
-                    resource,
-                    rawTitle: title,
-                    htmlLink: googleItem.htmlLink || null,
-                }
-            };
-        }
-
-        /*****************************************************************
-         * FullCalendar init
-         *****************************************************************/
-        const calendarEl = document.getElementById("calendar");
-
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: "dayGridMonth",
-            headerToolbar: {
-                left: "prev,next today",
-                center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
-            },
-            height: "auto",
-            nowIndicator: true,
-
-            eventMouseEnter: function (info) {
-                showTooltip(info, info.jsEvent);
-            },
-            eventMouseLeave: function () {
-                hideTooltip();
-            },
-            eventMouseMove: function (info) {
-                moveTooltip(info.jsEvent);
-            },
-
-
-            eventClick: function (info) {
-                const link = info.event.extendedProps.htmlLink;
-                if (link) window.open(link, "_blank");
-            },
-
-            events: async function (fetchInfo, successCallback, failureCallback) {
-                try {
-                    setError("");
-
-                    state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
-
-                    buildResourceListFromCached();
-                    renderToggles();
-
-                    const fcEvents = state.cachedEvents
-                        .map(toFullCalendarEvent)
-                        .filter(e => {
-                            const r = e.extendedProps.resource;
-                            if (!r) return state.selectedResources.size > 0;
-                            return state.selectedResources.has(r);
-                        });
-
-                    updateCountPill(state.selectedResources.size);
-                    successCallback(fcEvents);
-                } catch (err) {
-                    setError(err.message || String(err));
-                    failureCallback(err);
-                }
-            }
-        });
-
-        calendar.render();
-
-        /*****************************************************************
-         * Buttons
-         *****************************************************************/
-        document.getElementById("selectAllBtn").addEventListener("click", () => {
-            for (const r of state.availableResources) state.selectedResources.add(r);
-            renderToggles();
-            calendar.refetchEvents();
-        });
-
-        document.getElementById("selectNoneBtn").addEventListener("click", () => {
-            state.selectedResources.clear();
-            renderToggles();
-            calendar.refetchEvents();
-        });
-
-        document.getElementById("refreshBtn").addEventListener("click", () => {
-            calendar.refetchEvents();
-        });
-    </script>
+    window.addEventListener("resize", ensurePanelLocation);
+    ensurePanelLocation();
+  </script>
 
 </body>
 
