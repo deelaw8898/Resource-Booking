@@ -686,6 +686,14 @@
         padding: 8px 0;
         font-size: 11px;
       }
+      /* Disable "+X more" interaction completely */
+.fc-daygrid-more-link {
+  pointer-events: none !important;
+  cursor: default !important;
+  color: rgba(15, 23, 42, 0.45) !important; /* optional: make it look disabled */
+  text-decoration: none !important;
+}
+
     }
   </style>
 </head>
@@ -1158,9 +1166,12 @@
       dayMaxEventRows: 3,
 
       // ✅ When "+X more" is tapped, open our sheet instead of FC popover
-      moreLinkClick: function () {
-        return false; // completely disable "+X more"
-      },
+      moreLinkClick: function (arg) {
+  // Completely disable: no FC popover, no bubbling to dateClick
+  arg.jsEvent.preventDefault();
+  arg.jsEvent.stopPropagation();
+  return "none";
+},
 
 
 
