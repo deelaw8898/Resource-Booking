@@ -46,10 +46,11 @@
     }
 
     .topbar {
+      position: relative;
       display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      /* center content */
       margin-bottom: 14px;
     }
 
@@ -57,6 +58,8 @@
       margin: 0;
       font-size: 22px;
       letter-spacing: -0.02em;
+      text-align: center;
+
     }
 
     .titleBlock p {
@@ -397,6 +400,8 @@
       white-space: nowrap;
       align-items: center;
       gap: 8px;
+      position: absolute;
+      right: 0;
     }
 
     .hamburger:hover {
@@ -686,13 +691,15 @@
         padding: 8px 0;
         font-size: 11px;
       }
+
       /* Disable "+X more" interaction completely */
-.fc-daygrid-more-link {
-  pointer-events: none !important;
-  cursor: default !important;
-  color: rgba(15, 23, 42, 0.45) !important; /* optional: make it look disabled */
-  text-decoration: none !important;
-}
+      .fc-daygrid-more-link {
+        pointer-events: none !important;
+        cursor: default !important;
+        color: rgba(15, 23, 42, 0.45) !important;
+        /* optional: make it look disabled */
+        text-decoration: none !important;
+      }
 
     }
   </style>
@@ -703,7 +710,7 @@
     <div class="topbar">
       <div class="titleBlock">
         <h1>Resource Calendar</h1>
-        <p>Filter resources. Click an event to open it in Google Calendar.</p>
+        <!-- <p>Filter resources. Click an event to open it in Google Calendar.</p> -->
       </div>
 
       <button id="openFiltersBtn" class="hamburger" type="button" aria-label="Open filters">
@@ -1167,11 +1174,11 @@
 
       // ✅ When "+X more" is tapped, open our sheet instead of FC popover
       moreLinkClick: function (arg) {
-  // Completely disable: no FC popover, no bubbling to dateClick
-  arg.jsEvent.preventDefault();
-  arg.jsEvent.stopPropagation();
-  return "none";
-},
+        // Completely disable: no FC popover, no bubbling to dateClick
+        arg.jsEvent.preventDefault();
+        arg.jsEvent.stopPropagation();
+        return "none";
+      },
 
 
 
