@@ -31,7 +31,9 @@
       --sheet-radius: 18px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -70,7 +72,8 @@
       align-items: start;
     }
 
-    .panel, #calendar {
+    .panel,
+    #calendar {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -144,7 +147,9 @@
       transform: translateY(-1px);
     }
 
-    button:active { transform: translateY(0px); }
+    button:active {
+      transform: translateY(0px);
+    }
 
     button:focus {
       outline: none;
@@ -159,7 +164,9 @@
       border-color: rgba(37, 99, 235, 0.45);
     }
 
-    #refreshBtn:hover { background: var(--primary-hover); }
+    #refreshBtn:hover {
+      background: var(--primary-hover);
+    }
 
     .bookBtn {
       display: block;
@@ -182,7 +189,9 @@
       box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
     }
 
-    .bookBtn:active { transform: translateY(0); }
+    .bookBtn:active {
+      transform: translateY(0);
+    }
 
     #resourceToggles {
       margin-top: 12px;
@@ -191,7 +200,9 @@
       padding-right: 6px;
     }
 
-    #resourceToggles::-webkit-scrollbar { width: 10px; }
+    #resourceToggles::-webkit-scrollbar {
+      width: 10px;
+    }
 
     #resourceToggles::-webkit-scrollbar-thumb {
       background: rgba(15, 23, 42, 0.12);
@@ -235,7 +246,10 @@
       user-select: none;
     }
 
-    .muted { color: var(--muted); font-size: 12px; }
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     .error {
       margin-top: 12px;
@@ -298,7 +312,9 @@
       transform: translateY(-1px);
     }
 
-    .fc .fc-button:active { transform: translateY(0px); }
+    .fc .fc-button:active {
+      transform: translateY(0px);
+    }
 
     .fc .fc-button-primary:not(:disabled).fc-button-active {
       background: rgba(37, 99, 235, 0.10) !important;
@@ -306,7 +322,9 @@
       color: rgba(15, 23, 42, 0.9) !important;
     }
 
-    .fc .fc-button-primary:focus { box-shadow: var(--ring) !important; }
+    .fc .fc-button-primary:focus {
+      box-shadow: var(--ring) !important;
+    }
 
     /* Events */
     .fc .fc-event,
@@ -331,7 +349,10 @@
     }
 
     /* Make day cells feel tappable */
-    .fc .fc-daygrid-day-frame { cursor: pointer; }
+    .fc .fc-daygrid-day-frame {
+      cursor: pointer;
+    }
+
     .fc .fc-daygrid-day:hover .fc-daygrid-day-frame {
       background: rgba(15, 23, 42, 0.02);
     }
@@ -378,7 +399,9 @@
       gap: 8px;
     }
 
-    .hamburger:hover { background: rgba(15, 23, 42, 0.03); }
+    .hamburger:hover {
+      background: rgba(15, 23, 42, 0.03);
+    }
 
     .iconBtn {
       border: 1px solid var(--border);
@@ -398,7 +421,9 @@
       z-index: 10000;
     }
 
-    .overlay.open { display: block; }
+    .overlay.open {
+      display: block;
+    }
 
     .drawer {
       position: absolute;
@@ -414,7 +439,9 @@
       transition: transform .2s ease;
     }
 
-    .overlay.open .drawer { transform: translateX(0); }
+    .overlay.open .drawer {
+      transform: translateX(0);
+    }
 
     .drawerHeader {
       display: flex;
@@ -443,7 +470,9 @@
       z-index: 11000;
     }
 
-    .sheetOverlay.open { display: block; }
+    .sheetOverlay.open {
+      display: block;
+    }
 
     .sheet {
       position: absolute;
@@ -462,7 +491,9 @@
       overflow: hidden;
     }
 
-    .sheetOverlay.open .sheet { transform: translateY(0); }
+    .sheetOverlay.open .sheet {
+      transform: translateY(0);
+    }
 
     .sheetHandle {
       width: 46px;
@@ -536,8 +567,14 @@
       transition: transform .06s ease, background .12s ease;
     }
 
-    .eventItem:hover { background: rgba(15, 23, 42, 0.035); transform: translateY(-1px); }
-    .eventItem:active { transform: translateY(0); }
+    .eventItem:hover {
+      background: rgba(15, 23, 42, 0.035);
+      transform: translateY(-1px);
+    }
+
+    .eventItem:active {
+      transform: translateY(0);
+    }
 
     .eventBar {
       width: 10px;
@@ -591,11 +628,17 @@
       gap: 12px;
     }
 
-    .wrap>#filtersPanel { display: none; }
+    .wrap>#filtersPanel {
+      display: none;
+    }
 
-    .hamburger { display: inline-flex; }
+    .hamburger {
+      display: inline-flex;
+    }
 
-    #drawerBody #filtersPanel { display: block !important; }
+    #drawerBody #filtersPanel {
+      display: block !important;
+    }
 
     #calendar {
       padding: 10px;
@@ -609,18 +652,40 @@
 
     /* Tighten FullCalendar for phones */
     @media (max-width: 520px) {
-      .titleBlock h1 { font-size: 18px; }
-      .titleBlock p { font-size: 12px; }
+      .titleBlock h1 {
+        font-size: 18px;
+      }
 
-      .fc .fc-toolbar-title { font-size: 16px; }
-      .fc .fc-button { padding: 7px 8px !important; font-size: 12px !important; border-radius: 12px !important; }
+      .titleBlock p {
+        font-size: 12px;
+      }
+
+      .fc .fc-toolbar-title {
+        font-size: 16px;
+      }
+
+      .fc .fc-button {
+        padding: 7px 8px !important;
+        font-size: 12px !important;
+        border-radius: 12px !important;
+      }
 
       /* smaller event chips */
-      .fc .fc-daygrid-event { padding: 1px 5px; font-size: 11px; }
-      .fc .fc-daygrid-day-number { font-size: 12px; padding: 6px 6px 0 0; }
+      .fc .fc-daygrid-event {
+        padding: 1px 5px;
+        font-size: 11px;
+      }
+
+      .fc .fc-daygrid-day-number {
+        font-size: 12px;
+        padding: 6px 6px 0 0;
+      }
 
       /* reduce header height */
-      .fc .fc-col-header-cell-cushion { padding: 8px 0; font-size: 11px; }
+      .fc .fc-col-header-cell-cushion {
+        padding: 8px 0;
+        font-size: 11px;
+      }
     }
   </style>
 </head>
@@ -882,6 +947,13 @@
       return dateObj.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" });
     }
 
+    function localDateFromDateStr(dateStr) {
+      // dateStr like "2026-02-13"
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d); // local midnight
+    }
+
+
     /*****************************************************************
      * State
      *****************************************************************/
@@ -1066,88 +1138,89 @@
       }
     });
 
-/*****************************************************************
- * FullCalendar init
- *****************************************************************/
- const calendarEl = document.getElementById("calendar");
+    /*****************************************************************
+     * FullCalendar init
+     *****************************************************************/
+    const calendarEl = document.getElementById("calendar");
 
-const calendar = new FullCalendar.Calendar(calendarEl, {
-  initialView: "dayGridMonth",
-  headerToolbar: {
-    left: "prev,next today",
-    center: "title",
-    right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
-  },
-  height: "auto",
-  nowIndicator: true,
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+      },
+      height: "auto",
+      nowIndicator: true,
 
-  // ✅ Limit how many events show inside a day box (month view)
-  dayMaxEvents: 3,
-  dayMaxEventRows: 3,
+      // ✅ Limit how many events show inside a day box (month view)
+      dayMaxEvents: 3,
+      dayMaxEventRows: 3,
 
-  // ✅ When "+X more" is tapped, open our sheet instead of FC popover
-  moreLinkClick: function (arg) {
-    openDaySheet(arg.date);
-    return "none";
-  },
+      // ✅ When "+X more" is tapped, open our sheet instead of FC popover
+      moreLinkClick: function (arg) {
+        openDaySheet(localDateFromDateStr(arg.dateStr));
+        return "none";
+      },
 
-  // ✅ Clicking the day cell opens our sheet (month/dayGrid views)
-  dateClick: function (info) {
-    if (info.view.type.startsWith("dayGrid")) {
-      openDaySheet(info.date);
-    }
-  },
+      // ✅ Clicking the day cell opens our sheet (month/dayGrid views)
+      dateClick: function (info) {
+        if (info.view.type.startsWith("dayGrid")) {
+          openDaySheet(localDateFromDateStr(info.dateStr));
+        }
+      },
 
-  // Tooltips only matter on desktop anyway; your showTooltip already skips touch
-  eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
-  eventMouseLeave: function () { hideTooltip(); },
-  eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
 
-  // ✅ In busy days (>3 events), don't open Google Calendar from month view.
-  //    Instead, open the sheet so user can pick the exact event.
-  eventClick: function (info) {
-    const link = info.event.extendedProps.htmlLink;
+      // Tooltips only matter on desktop anyway; your showTooltip already skips touch
+      eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
+      eventMouseLeave: function () { hideTooltip(); },
+      eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
 
-    if (info.view.type.startsWith("dayGrid")) {
-      const clickedDay = info.event.start;
-      const countThatDay = calendar.getEvents().filter(ev => eventOverlapsDay(ev, clickedDay)).length;
+      // ✅ In busy days (>3 events), don't open Google Calendar from month view.
+      //    Instead, open the sheet so user can pick the exact event.
+      eventClick: function (info) {
+        const link = info.event.extendedProps.htmlLink;
 
-      if (countThatDay > 3) {
-        openDaySheet(clickedDay);
-        return;
+        if (info.view.type.startsWith("dayGrid")) {
+          const clickedDay = info.event.start;
+          const countThatDay = calendar.getEvents().filter(ev => eventOverlapsDay(ev, clickedDay)).length;
+
+          if (countThatDay > 3) {
+            openDaySheet(clickedDay);
+            return;
+          }
+        }
+
+        if (link) window.open(link, "_blank");
+      },
+
+      events: async function (fetchInfo, successCallback, failureCallback) {
+        try {
+          setError("");
+
+          state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
+
+          buildResourceListFromCached();
+          renderToggles();
+
+          const fcEvents = state.cachedEvents
+            .map(toFullCalendarEvent)
+            .filter(e => {
+              const r = e.extendedProps.resource;
+              if (!r) return state.selectedResources.size > 0;
+              return state.selectedResources.has(r);
+            });
+
+          updateCountPill(state.selectedResources.size);
+          successCallback(fcEvents);
+        } catch (err) {
+          setError(err.message || String(err));
+          failureCallback(err);
+        }
       }
-    }
+    });
 
-    if (link) window.open(link, "_blank");
-  },
-
-  events: async function (fetchInfo, successCallback, failureCallback) {
-    try {
-      setError("");
-
-      state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
-
-      buildResourceListFromCached();
-      renderToggles();
-
-      const fcEvents = state.cachedEvents
-        .map(toFullCalendarEvent)
-        .filter(e => {
-          const r = e.extendedProps.resource;
-          if (!r) return state.selectedResources.size > 0;
-          return state.selectedResources.has(r);
-        });
-
-      updateCountPill(state.selectedResources.size);
-      successCallback(fcEvents);
-    } catch (err) {
-      setError(err.message || String(err));
-      failureCallback(err);
-    }
-  }
-});
-
-calendar.render();
+    calendar.render();
 
     /*****************************************************************
      * Buttons
