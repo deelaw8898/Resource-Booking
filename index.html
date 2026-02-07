@@ -1066,65 +1066,88 @@
       }
     });
 
-    /*****************************************************************
-     * FullCalendar init
-     *****************************************************************/
-    const calendarEl = document.getElementById("calendar");
+/*****************************************************************
+ * FullCalendar init
+ *****************************************************************/
+ const calendarEl = document.getElementById("calendar");
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: "dayGridMonth",
-      headerToolbar: {
-        left: "prev,next today",
-        center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
-      },
-      height: "auto",
-      nowIndicator: true,
+const calendar = new FullCalendar.Calendar(calendarEl, {
+  initialView: "dayGridMonth",
+  headerToolbar: {
+    left: "prev,next today",
+    center: "title",
+    right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+  },
+  height: "auto",
+  nowIndicator: true,
 
-      // Make tapping a date open the sheet
-      dateClick: function (info) {
-        // Only open for dayGridMonth/dayGrid views (avoid weirdness in timeGrid clicks)
-        if (info.view.type.startsWith("dayGrid")) {
-          openDaySheet(info.date);
-        }
-      },
+  // ✅ Limit how many events show inside a day box (month view)
+  dayMaxEvents: 3,
+  dayMaxEventRows: 3,
 
-      // Tooltips only for mouse/desktop
-      eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
-      eventMouseLeave: function () { hideTooltip(); },
-      eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
+  // ✅ When "+X more" is tapped, open our sheet instead of FC popover
+  moreLinkClick: function (arg) {
+    openDaySheet(arg.date);
+    return "none";
+  },
 
-      eventClick: function (info) {
-        const link = info.event.extendedProps.htmlLink;
-        if (link) window.open(link, "_blank");
-      },
+  // ✅ Clicking the day cell opens our sheet (month/dayGrid views)
+  dateClick: function (info) {
+    if (info.view.type.startsWith("dayGrid")) {
+      openDaySheet(info.date);
+    }
+  },
 
-      events: async function (fetchInfo, successCallback, failureCallback) {
-        try {
-          setError("");
-          state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
+  // Tooltips only matter on desktop anyway; your showTooltip already skips touch
+  eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
+  eventMouseLeave: function () { hideTooltip(); },
+  eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
 
-          buildResourceListFromCached();
-          renderToggles();
+  // ✅ In busy days (>3 events), don't open Google Calendar from month view.
+  //    Instead, open the sheet so user can pick the exact event.
+  eventClick: function (info) {
+    const link = info.event.extendedProps.htmlLink;
 
-          const fcEvents = state.cachedEvents
-            .map(toFullCalendarEvent)
-            .filter(e => {
-              const r = e.extendedProps.resource;
-              if (!r) return state.selectedResources.size > 0;
-              return state.selectedResources.has(r);
-            });
+    if (info.view.type.startsWith("dayGrid")) {
+      const clickedDay = info.event.start;
+      const countThatDay = calendar.getEvents().filter(ev => eventOverlapsDay(ev, clickedDay)).length;
 
-          updateCountPill(state.selectedResources.size);
-          successCallback(fcEvents);
-        } catch (err) {
-          setError(err.message || String(err));
-          failureCallback(err);
-        }
+      if (countThatDay > 3) {
+        openDaySheet(clickedDay);
+        return;
       }
-    });
+    }
 
-    calendar.render();
+    if (link) window.open(link, "_blank");
+  },
+
+  events: async function (fetchInfo, successCallback, failureCallback) {
+    try {
+      setError("");
+
+      state.cachedEvents = await fetchGoogleEvents(fetchInfo.start, fetchInfo.end);
+
+      buildResourceListFromCached();
+      renderToggles();
+
+      const fcEvents = state.cachedEvents
+        .map(toFullCalendarEvent)
+        .filter(e => {
+          const r = e.extendedProps.resource;
+          if (!r) return state.selectedResources.size > 0;
+          return state.selectedResources.has(r);
+        });
+
+      updateCountPill(state.selectedResources.size);
+      successCallback(fcEvents);
+    } catch (err) {
+      setError(err.message || String(err));
+      failureCallback(err);
+    }
+  }
+});
+
+calendar.render();
 
     /*****************************************************************
      * Buttons
