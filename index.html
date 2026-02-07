@@ -1159,9 +1159,18 @@
 
       // ✅ When "+X more" is tapped, open our sheet instead of FC popover
       moreLinkClick: function (arg) {
-        openDaySheet(localDateFromDateStr(arg.dateStr));
-        return "none";
+        // stop FullCalendar's default "+X more" behavior
+        arg.jsEvent.preventDefault();
+        arg.jsEvent.stopPropagation();
+
+        // arg.date can be affected by timezone, so normalize to LOCAL midnight
+        const d = arg.date;
+        const localDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+        openDaySheet(localDay);
+        return "none"; // (extra safety) don't show FullCalendar popover
       },
+
 
       // ✅ Clicking the day cell opens our sheet (month/dayGrid views)
       dateClick: function (info) {
