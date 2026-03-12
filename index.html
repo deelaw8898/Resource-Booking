@@ -6,27 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Resource Calendar</title>
 
-  <!-- FullCalendar (CDN) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
   <style>
     :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
       --text: #0f172a;
       --muted: #64748b;
-      --border: rgba(15, 23, 42, 0.10);
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
-      --ring: 0 0 0 4px rgba(59, 130, 246, 0.18);
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
       --danger: #dc2626;
-      --radius: 16px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.07);
+      --ring: 0 0 0 4px rgba(37, 99, 235, 0.14);
+      --radius: 18px;
 
-      /* Bottom sheet */
-      --sheet-bg: rgba(15, 23, 42, 0.45);
+      --sheet-bg: rgba(15, 23, 42, 0.38);
       --sheet-card: #ffffff;
       --sheet-radius: 18px;
     }
@@ -35,54 +35,216 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(37, 99, 235, 0.08), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(16, 185, 129, 0.08), transparent 55%),
+        radial-gradient(1200px 500px at 10% -10%, rgba(37, 99, 235, 0.06), transparent 55%),
+        radial-gradient(900px 450px at 100% 0%, rgba(16, 185, 129, 0.05), transparent 50%),
         var(--bg);
     }
 
-    .topbar {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+    a {
+      color: inherit;
     }
 
-    .titleBlock h1 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: -0.02em;
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px 16px 24px;
     }
 
-    .titleBlock p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .wrap {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .panel,
+    .headerCard,
     #calendar {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
     }
 
+    .headerCard {
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .headerTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brandBlock {
+      min-width: 0;
+    }
+
+    .brandBlock h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+
+    .brandBlock p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    .headerActions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .actionBtn,
+    .resourceBtn,
+    .iconBtn,
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .06s ease, box-shadow .15s ease;
+    }
+
+    .actionBtn:hover,
+    .resourceBtn:hover,
+    .iconBtn:hover,
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .actionBtn:active,
+    .resourceBtn:active,
+    .iconBtn:active,
+    button:active {
+      transform: translateY(0);
+    }
+
+    .actionBtn:focus,
+    .resourceBtn:focus,
+    .iconBtn:focus,
+    button:focus {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    .actionBtn {
+      min-height: 44px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .actionBtnPrimary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+    }
+
+    .actionBtnPrimary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .actionBtnSecondary {
+      background: #fff;
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .resourceBtn {
+      min-height: 44px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      background: var(--surface-soft);
+      border-color: var(--border);
+      color: #334155;
+    }
+
+    .menuIcon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0 14px;
+    }
+
+    .helperRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .helperText {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .helperMeta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 11px;
+      white-space: nowrap;
+    }
+
+    .helperMetaDot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--primary);
+      display: inline-block;
+    }
+
+    #calendar {
+      padding: 14px;
+      min-height: 560px;
+      box-shadow: var(--shadow-md);
+    }
+
     .panel {
       padding: 14px;
       overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
     }
 
     .panelHeader {
@@ -96,21 +258,29 @@
     }
 
     .panelHeader strong {
-      font-size: 14px;
-      letter-spacing: -0.01em;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .panelSubtext {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 10px;
+      padding: 7px 10px;
       border: 1px solid var(--border);
       border-radius: 999px;
       font-size: 12px;
       color: var(--muted);
-      background: rgba(15, 23, 42, 0.03);
+      background: var(--surface-soft);
       user-select: none;
+      white-space: nowrap;
+      font-weight: 600;
     }
 
     .pill::before {
@@ -118,86 +288,47 @@
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: rgba(37, 99, 235, 0.8);
+      background: rgba(37, 99, 235, 0.9);
       display: inline-block;
     }
 
-    .btns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+    .miniActions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 4px 0 10px;
+      padding: 0 2px;
     }
 
-    button {
+    .linkAction {
       appearance: none;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #fff;
-      color: var(--text);
+      border: none;
+      background: transparent;
+      padding: 0;
+      color: var(--muted);
       cursor: pointer;
       font-weight: 600;
       font-size: 13px;
-      transition: transform .06s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+      transition: color .15s ease;
     }
 
-    button:hover {
-      background: rgba(15, 23, 42, 0.03);
-      transform: translateY(-1px);
+    .linkAction:hover {
+      color: var(--text);
+      transform: none;
     }
 
-    button:active {
-      transform: translateY(0px);
-    }
-
-    button:focus {
-      outline: none;
-      box-shadow: var(--ring);
-      border-color: rgba(37, 99, 235, 0.35);
-    }
-
-    #refreshBtn {
-      grid-column: 1 / -1;
-      background: var(--primary);
-      color: #fff;
-      border-color: rgba(37, 99, 235, 0.45);
-    }
-
-    #refreshBtn:hover {
-      background: var(--primary-hover);
-    }
-
-    .bookBtn {
-      display: block;
-      margin: 12px 0 14px;
-      padding: 12px 14px;
-      text-align: center;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 14px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
-      transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
-    }
-
-    .bookBtn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
-    }
-
-    .bookBtn:active {
-      transform: translateY(0);
+    .miniDivider {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
     }
 
     #resourceToggles {
-      margin-top: 12px;
-      max-height: calc(100vh - 310px);
+      margin-top: 8px;
+      max-height: calc(100vh - 290px);
       overflow: auto;
-      padding-right: 6px;
+      padding-right: 4px;
     }
 
     #resourceToggles::-webkit-scrollbar {
@@ -214,41 +345,37 @@
     .row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 8px 0;
-      padding: 10px 10px;
+      gap: 12px;
+      margin: 6px 0;
+      padding: 12px 10px;
       border: 1px solid transparent;
       border-radius: 14px;
       transition: background .12s ease, border-color .12s ease;
     }
 
     .row:hover {
-      background: rgba(15, 23, 42, 0.03);
-      border-color: rgba(15, 23, 42, 0.06);
+      background: var(--surface-soft);
+      border-color: var(--border);
     }
 
     .row input[type="checkbox"] {
       width: 18px;
       height: 18px;
-      border-radius: 6px;
       accent-color: var(--primary);
       cursor: pointer;
+      flex: 0 0 auto;
+      margin: 0;
     }
 
     .row label {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      line-height: 1.1;
-      font-size: 13px;
-      color: rgba(15, 23, 42, 0.86);
+      gap: 10px;
+      line-height: 1.2;
+      font-size: 14px;
+      color: rgba(15, 23, 42, 0.92);
       user-select: none;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 12px;
     }
 
     .error {
@@ -262,31 +389,27 @@
       white-space: pre-wrap;
     }
 
-    #calendar {
-      padding: 14px;
-      min-height: 560px;
-    }
-
-    /* FullCalendar theme tweaks */
     .fc {
-      --fc-border-color: rgba(15, 23, 42, 0.10);
+      --fc-border-color: #e2e8f0;
       --fc-page-bg-color: transparent;
-      --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+      --fc-today-bg-color: rgba(37, 99, 235, 0.07);
       --fc-small-font-size: 0.84em;
       --fc-event-border-color: transparent;
       --fc-event-text-color: #fff;
       --fc-event-bg-color: var(--primary);
-      --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.10);
+      --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .fc .fc-toolbar {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .fc .fc-toolbar-title {
       font-size: 18px;
       letter-spacing: -0.02em;
-    }
-
-    .fc .fc-toolbar {
-      flex-wrap: wrap;
-      gap: 10px;
+      font-weight: 800;
     }
 
     .fc .fc-toolbar-chunk {
@@ -300,38 +423,33 @@
       border-radius: 12px !important;
       border: 1px solid var(--border) !important;
       background: #fff !important;
-      color: rgba(15, 23, 42, 0.85) !important;
-      padding: 8px 10px !important;
+      color: #334155 !important;
+      padding: 8px 11px !important;
       font-weight: 600 !important;
       box-shadow: none !important;
       transition: background .15s ease, transform .06s ease, border-color .15s ease;
     }
 
     .fc .fc-button:hover {
-      background: rgba(15, 23, 42, 0.04) !important;
-      transform: translateY(-1px);
-    }
-
-    .fc .fc-button:active {
-      transform: translateY(0px);
+      background: var(--surface-soft) !important;
+      border-color: var(--border-strong) !important;
     }
 
     .fc .fc-button-primary:not(:disabled).fc-button-active {
       background: rgba(37, 99, 235, 0.10) !important;
-      border-color: rgba(37, 99, 235, 0.25) !important;
-      color: rgba(15, 23, 42, 0.9) !important;
+      border-color: rgba(37, 99, 235, 0.24) !important;
+      color: #1e3a8a !important;
     }
 
     .fc .fc-button-primary:focus {
       box-shadow: var(--ring) !important;
     }
 
-    /* Events */
     .fc .fc-event,
     .fc .fc-daygrid-event {
       border-radius: 999px;
       padding: 2px 6px;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     }
 
     .fc .fc-timegrid-event {
@@ -340,31 +458,41 @@
     }
 
     .fc .fc-col-header-cell-cushion {
-      padding: 10px 0;
-      color: rgba(15, 23, 42, 0.65);
+      padding: 12px 0;
+      color: #64748b;
       font-weight: 700;
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: .05em;
     }
 
-    /* Make day cells feel tappable */
     .fc .fc-daygrid-day-frame {
       cursor: pointer;
     }
 
     .fc .fc-daygrid-day:hover .fc-daygrid-day-frame {
-      background: rgba(15, 23, 42, 0.02);
+      background: rgba(15, 23, 42, 0.015);
     }
 
-    /* Tooltip (desktop hover) */
+    .fc .fc-daygrid-day-number {
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .fc .fc-more-link,
+    .fc-daygrid-more-link {
+      color: #64748b !important;
+      font-weight: 600;
+      text-decoration: none !important;
+    }
+
     .tooltip {
       position: fixed;
       z-index: 9999;
       max-width: 360px;
       padding: 10px 12px;
       border-radius: 12px;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.95);
       color: #fff;
       font-size: 12px;
       line-height: 1.25;
@@ -374,7 +502,7 @@
     }
 
     .tooltip .tt-time {
-      opacity: 0.85;
+      opacity: 0.84;
       font-weight: 700;
       margin-bottom: 4px;
     }
@@ -384,38 +512,10 @@
       word-break: break-word;
     }
 
-    /* Hamburger + mobile drawer */
-    .hamburger {
-      display: none;
-      border-radius: 12px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-weight: 800;
-      color: rgba(15, 23, 42, 0.85);
-      cursor: pointer;
-      white-space: nowrap;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .hamburger:hover {
-      background: rgba(15, 23, 42, 0.03);
-    }
-
-    .iconBtn {
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      cursor: pointer;
-      font-weight: 900;
-    }
-
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(15, 23, 42, 0.30);
       backdrop-filter: blur(4px);
       display: none;
       z-index: 10000;
@@ -430,13 +530,13 @@
       top: 0;
       right: 0;
       height: 100%;
-      width: min(92vw, 420px);
-      background: var(--card);
+      width: min(92vw, 410px);
+      background: var(--surface);
       border-left: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
-      padding: 12px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+      padding: 14px;
       transform: translateX(100%);
-      transition: transform .2s ease;
+      transition: transform .22s ease;
     }
 
     .overlay.open .drawer {
@@ -448,19 +548,31 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 8px 6px 12px;
+      padding: 4px 4px 12px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 12px;
     }
 
+    .drawerHeader strong {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
     .drawerBody {
-      height: calc(100% - 60px);
+      height: calc(100% - 62px);
       overflow: auto;
     }
 
-    /* =========================
-       Bottom Sheet (Day events)
-       ========================= */
+    .iconBtn {
+      min-width: 38px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 16px;
+    }
+
     .sheetOverlay {
       position: fixed;
       inset: 0;
@@ -482,7 +594,7 @@
       background: var(--sheet-card);
       border-top-left-radius: var(--sheet-radius);
       border-top-right-radius: var(--sheet-radius);
-      box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
+      box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.18);
       transform: translateY(110%);
       transition: transform .22s ease;
       max-height: 78vh;
@@ -522,7 +634,7 @@
     .sheetTitle {
       font-weight: 800;
       letter-spacing: -0.02em;
-      font-size: 15px;
+      font-size: 16px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -559,21 +671,18 @@
       grid-template-columns: 10px 1fr;
       gap: 10px;
       align-items: start;
-      padding: 10px 10px;
+      padding: 12px;
       border-radius: 14px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      background: rgba(15, 23, 42, 0.02);
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
       cursor: pointer;
-      transition: transform .06s ease, background .12s ease;
+      transition: transform .06s ease, background .12s ease, border-color .12s ease;
     }
 
     .eventItem:hover {
-      background: rgba(15, 23, 42, 0.035);
+      background: #f1f5f9;
+      border-color: var(--border-strong);
       transform: translateY(-1px);
-    }
-
-    .eventItem:active {
-      transform: translateY(0);
     }
 
     .eventBar {
@@ -598,157 +707,226 @@
     }
 
     .eventTitle {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
-      color: rgba(15, 23, 42, 0.92);
-      line-height: 1.2;
+      color: rgba(15, 23, 42, 0.95);
+      line-height: 1.25;
       word-break: break-word;
     }
 
     .emptyState {
       padding: 16px 12px;
       border-radius: 14px;
-      border: 1px dashed rgba(15, 23, 42, 0.16);
-      background: rgba(15, 23, 42, 0.02);
+      border: 1px dashed var(--border-strong);
+      background: var(--surface-soft);
       color: var(--muted);
       font-size: 13px;
     }
 
-    /* =========================
-       Mobile-first behavior
-       ========================= */
-    .container {
-      width: 100%;
-      margin: 14px auto;
-      padding: 0 12px 18px;
-    }
-
-    .wrap {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .wrap>#filtersPanel {
+    .desktopFilters {
       display: none;
-    }
-
-    .hamburger {
-      display: inline-flex;
     }
 
     #drawerBody #filtersPanel {
       display: block !important;
     }
 
-    #calendar {
-      padding: 10px;
-      min-height: 520px;
+    @media (max-width: 900px) {
+      .brandBlock h1 {
+        font-size: 28px;
+      }
     }
 
-    .tooltip {
-      max-width: 260px;
-      font-size: 11px;
-    }
+    @media (max-width: 680px) {
+  .container {
+    padding: 12px 10px 18px;
+  }
 
-    /* Tighten FullCalendar for phones */
-    @media (max-width: 520px) {
-      .titleBlock h1 {
-        font-size: 18px;
-      }
+  .headerCard {
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+  }
 
-      .titleBlock p {
-        font-size: 12px;
-      }
+  .headerTop {
+    gap: 12px;
+  }
 
-      .fc .fc-toolbar-title {
-        font-size: 16px;
-      }
+  .brandBlock h1 {
+    font-size: 21px;
+    line-height: 1.08;
+  }
 
-      .fc .fc-button {
-        padding: 7px 8px !important;
-        font-size: 12px !important;
-        border-radius: 12px !important;
-      }
+  .brandBlock p {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
 
-      /* smaller event chips */
-      .fc .fc-daygrid-event {
-        padding: 1px 5px;
-        font-size: 11px;
-      }
+  .headerActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
 
-      .fc .fc-daygrid-day-number {
-        font-size: 12px;
-        padding: 6px 6px 0 0;
-      }
+  .actionBtnPrimary {
+    grid-column: 1 / -1;
+  }
 
-      /* reduce header height */
-      .fc .fc-col-header-cell-cushion {
-        padding: 8px 0;
-        font-size: 11px;
-      }
-      /* Disable "+X more" interaction completely */
-.fc-daygrid-more-link {
-  pointer-events: none !important;
-  cursor: default !important;
-  color: rgba(15, 23, 42, 0.45) !important; /* optional: make it look disabled */
-  text-decoration: none !important;
+  .actionBtn,
+  .resourceBtn {
+    min-height: 46px;
+    padding: 0 14px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  .resourceBtn {
+    justify-content: center;
+  }
+
+  .divider {
+    margin: 14px 0 12px;
+  }
+
+  .helperRow {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .helperText {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .helperMeta {
+    display: none;
+  }
+
+  #calendar {
+    padding: 10px 8px;
+    border-radius: 16px;
+  }
+
+  .fc .fc-toolbar {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 15px;
+  }
+
+  .fc .fc-toolbar-chunk {
+    gap: 6px;
+  }
+
+  .fc .fc-button {
+    padding: 7px 8px !important;
+    font-size: 12px !important;
+    border-radius: 10px !important;
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    padding: 8px 0;
+    font-size: 10px;
+  }
+
+  .fc .fc-daygrid-day-number {
+    font-size: 12px;
+    padding: 5px 5px 0 0;
+  }
+
+  .fc .fc-daygrid-event {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 999px;
+  }
+
+  .fc .fc-more-link,
+  .fc-daygrid-more-link {
+    font-size: 10px !important;
+  }
+
+  .tooltip {
+    max-width: 240px;
+    font-size: 11px;
+  }
 }
-
-    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="topbar">
-      <div class="titleBlock">
-        <h1>Resource Calendar</h1>
-        <!-- <p>Filter resources. Click an event to open it in Google Calendar.</p> -->
-      </div>
-
-      <button id="openFiltersBtn" class="hamburger" type="button" aria-label="Open filters">
-        ☰ Filters
-      </button>
-    </div>
-
-    <div class="wrap">
-      <div id="filtersPanel" class="panel">
-        <div class="panelHeader">
-          <strong>Resources</strong>
-          <span id="countPill" class="pill">0 shown</span>
+    <div class="headerCard">
+      <div class="headerTop">
+        <div class="brandBlock">
+          <h1>Resource Calendar</h1>
+          <p>View bookings by day, week, or month. Use Resources to show or hide rooms.</p>
         </div>
 
-        <div class="btns">
-          <button id="selectAllBtn" type="button">Select all</button>
-          <button id="selectNoneBtn" type="button">Select none</button>
-          <button id="refreshBtn" type="button">Refresh</button>
+        <div class="headerActions">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzEOgF4tvf9vKROKLOKXAbacnDnUyAEUcnRUYI6clOhtwGeA/viewform?usp=publish-editor"
+            target="_blank" rel="noopener noreferrer" class="actionBtn actionBtnPrimary">
+            Book Resource
+          </a>
+
+          <a href="https://forms.gle/jfE2nMLG81yu7Goq9"
+            target="_blank" rel="noopener noreferrer" class="actionBtn actionBtnSecondary">
+            Cancel Booking
+          </a>
+
+          <button id="openFiltersBtn" class="resourceBtn" type="button" aria-label="Open resources">
+            <span class="menuIcon">☰</span>
+            <span>Show/Hide Resources</span>
+          </button>
         </div>
-
-        <div id="resourceToggles"></div>
-        <div id="errorBox" class="error" style="display:none;"></div>
-
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzEOgF4tvf9vKROKLOKXAbacnDnUyAEUcnRUYI6clOhtwGeA/viewform?usp=publish-editor"
-          target="_blank" rel="noopener noreferrer" class="bookBtn">
-          + Book a Resource
-        </a>
       </div>
 
-      <div id="calendar"></div>
+      <div class="divider"></div>
+
+      <div class="helperRow">
+        <div class="helperText">Tap a day to see all bookings for that day. Tap a booking to open it in Google Calendar.</div>
+        <div class="helperMeta">
+          <span class="helperMetaDot"></span>
+          <span id="headerCount">13 resources available</span>
+        </div>
+      </div>
     </div>
+
+    <div id="calendar"></div>
   </div>
 
-  <!-- Mobile drawer overlay -->
   <div id="filtersOverlay" class="overlay" aria-hidden="true">
-    <div class="drawer" role="dialog" aria-modal="true" aria-label="Filters">
+    <div class="drawer" role="dialog" aria-modal="true" aria-label="Resources">
       <div class="drawerHeader">
-        <strong>Filters</strong>
-        <button id="closeFiltersBtn" class="iconBtn" type="button" aria-label="Close filters">✕</button>
+        <strong>Resources</strong>
+        <button id="closeFiltersBtn" class="iconBtn" type="button" aria-label="Close resources">✕</button>
       </div>
-      <div id="drawerBody" class="drawerBody"></div>
+      <div id="drawerBody" class="drawerBody">
+        <div id="filtersPanel" class="panel">
+          <div class="panelHeader">
+            <div>
+              <strong>Choose resources</strong>
+              <div class="panelSubtext">Select the rooms you want to see on the calendar.</div>
+            </div>
+            <span id="countPill" class="pill">0 shown</span>
+          </div>
+
+          <div class="miniActions">
+            <button id="selectAllBtn" class="linkAction" type="button">Select all</button>
+            <span class="miniDivider" aria-hidden="true"></span>
+            <button id="selectNoneBtn" class="linkAction" type="button">Select none</button>
+          </div>
+
+          <div id="resourceToggles"></div>
+          <div id="errorBox" class="error" style="display:none;"></div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Day Events Bottom Sheet -->
   <div id="daySheetOverlay" class="sheetOverlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-label="Events for selected day">
       <div class="sheetHandle"></div>
@@ -766,15 +944,9 @@
   </div>
 
   <script>
-    /*****************************************************************
-     * CONFIG:
-     *****************************************************************/
     const GOOGLE_API_KEY = "AIzaSyCmlYXwSAPkVqB5_a3JHdDjmzGsBNHVOqE";
     const GOOGLE_CALENDAR_ID = "asstgs.saskbaiturrahmat@ahmadiyya.ca";
 
-    /*****************************************************************
-     * RESOURCE DEFINITIONS (fixed list) + COLORS
-     *****************************************************************/
     const RESOURCES = [
       "BR - Lajna Prayer Hall",
       "BR - Lajna Classroom",
@@ -801,9 +973,6 @@
       RESOURCES.map((r, i) => [r, COLOR_PALETTE[i % COLOR_PALETTE.length]])
     );
 
-    /*****************************************************************
-     * Helpers
-     *****************************************************************/
     let activeTooltipEl = null;
 
     function formatTimeRange(event) {
@@ -829,7 +998,6 @@
     }
 
     function showTooltip(info, jsEvent) {
-      // On touch devices, tooltips are annoying.
       if (window.matchMedia("(pointer: coarse)").matches) return;
 
       hideTooltip();
@@ -882,7 +1050,9 @@
       return COLOR_PALETTE[hash % COLOR_PALETTE.length];
     }
 
-    function toIso(d) { return d.toISOString(); }
+    function toIso(d) {
+      return d.toISOString();
+    }
 
     function parseResource(summary) {
       const s = (summary || "").trim();
@@ -932,7 +1102,6 @@
       return d;
     }
 
-    // Does event overlap day?
     function eventOverlapsDay(event, dayDate) {
       const dayStart = startOfDay(dayDate);
       const dayEnd = endOfDay(dayDate);
@@ -942,8 +1111,6 @@
 
       if (!evStart) return false;
 
-      // FullCalendar all-day events often have end at next day 00:00 exclusive
-      // Our overlap check handles this.
       const aStart = evStart;
       const aEnd = evEnd ? evEnd : evStart;
 
@@ -951,20 +1118,19 @@
     }
 
     function formatDayHeader(dateObj) {
-      // e.g., "Fri, Feb 13, 2026"
-      return dateObj.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+      return dateObj.toLocaleDateString([], {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
     }
 
     function localDateFromDateStr(dateStr) {
-      // dateStr like "2026-02-13"
       const [y, m, d] = dateStr.split("-").map(Number);
-      return new Date(y, m - 1, d); // local midnight
+      return new Date(y, m - 1, d);
     }
 
-
-    /*****************************************************************
-     * State
-     *****************************************************************/
     const state = {
       selectedResources: new Set(),
       availableResources: [],
@@ -987,12 +1153,17 @@
       document.getElementById("countPill").textContent = `${shownCount} shown`;
     }
 
+    function updateHeaderCount() {
+      const total = RESOURCES.length;
+      document.getElementById("headerCount").textContent = `${total} resources available`;
+    }
+
     function renderToggles() {
       const holder = document.getElementById("resourceToggles");
       holder.innerHTML = "";
 
       if (state.availableResources.length === 0) {
-        holder.innerHTML = `<div class="muted" style="padding:10px 2px;">No resources found in this date range.</div>`;
+        holder.innerHTML = `<div class="panelSubtext" style="padding:10px 2px;">No resources found in this date range.</div>`;
         return;
       }
 
@@ -1021,7 +1192,7 @@
         dot.style.borderRadius = "999px";
         dot.style.display = "inline-block";
         dot.style.background = getColorForResource(r);
-        dot.style.marginRight = "6px";
+        dot.style.flex = "0 0 auto";
 
         label.appendChild(dot);
         label.appendChild(document.createTextNode(r));
@@ -1067,9 +1238,6 @@
       };
     }
 
-    /*****************************************************************
-     * Bottom sheet logic
-     *****************************************************************/
     const sheetOverlay = document.getElementById("daySheetOverlay");
     const sheetTitle = document.getElementById("sheetTitle");
     const sheetSubtitle = document.getElementById("sheetSubtitle");
@@ -1077,13 +1245,11 @@
     const sheetCloseBtn = document.getElementById("sheetCloseBtn");
 
     function openDaySheet(dateObj) {
-      // Pull currently rendered (filtered) events from FullCalendar:
       const all = calendar.getEvents();
 
       const dayEvents = all
         .filter(ev => eventOverlapsDay(ev, dateObj))
         .sort((a, b) => {
-          // All-day first, then time
           if (a.allDay && !b.allDay) return -1;
           if (!a.allDay && b.allDay) return 1;
           const as = a.start ? a.start.getTime() : 0;
@@ -1135,20 +1301,15 @@
 
     sheetCloseBtn.addEventListener("click", closeDaySheet);
     sheetOverlay.addEventListener("click", (e) => {
-      // close if clicking outside the card
       if (e.target === sheetOverlay) closeDaySheet();
     });
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        // Close sheet first if open, else close filters
         if (sheetOverlay.classList.contains("open")) closeDaySheet();
       }
     });
 
-    /*****************************************************************
-     * FullCalendar init
-     *****************************************************************/
     const calendarEl = document.getElementById("calendar");
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1160,36 +1321,31 @@
       },
       height: "auto",
       nowIndicator: true,
-
-      // ✅ Limit how many events show inside a day box (month view)
       dayMaxEvents: 3,
       dayMaxEventRows: 3,
 
-      // ✅ When "+X more" is tapped, open our sheet instead of FC popover
       moreLinkClick: function (arg) {
-  // Completely disable: no FC popover, no bubbling to dateClick
-  arg.jsEvent.preventDefault();
-  arg.jsEvent.stopPropagation();
-  return "none";
-},
+        arg.jsEvent.preventDefault();
+        arg.jsEvent.stopPropagation();
+        return "none";
+      },
 
-
-
-      // ✅ Clicking the day cell opens our sheet (month/dayGrid views)
       dateClick: function (info) {
         if (info.view.type.startsWith("dayGrid")) {
           openDaySheet(localDateFromDateStr(info.dateStr));
         }
       },
 
+      eventMouseEnter: function (info) {
+        showTooltip(info, info.jsEvent);
+      },
+      eventMouseLeave: function () {
+        hideTooltip();
+      },
+      eventMouseMove: function (info) {
+        moveTooltip(info.jsEvent);
+      },
 
-      // Tooltips only matter on desktop anyway; your showTooltip already skips touch
-      eventMouseEnter: function (info) { showTooltip(info, info.jsEvent); },
-      eventMouseLeave: function () { hideTooltip(); },
-      eventMouseMove: function (info) { moveTooltip(info.jsEvent); },
-
-      // ✅ In busy days (>3 events), don't open Google Calendar from month view.
-      //    Instead, open the sheet so user can pick the exact event.
       eventClick: function (info) {
         const link = info.event.extendedProps.htmlLink;
 
@@ -1233,10 +1389,8 @@
     });
 
     calendar.render();
+    updateHeaderCount();
 
-    /*****************************************************************
-     * Buttons
-     *****************************************************************/
     document.getElementById("selectAllBtn").addEventListener("click", () => {
       for (const r of state.availableResources) state.selectedResources.add(r);
       renderToggles();
@@ -1249,44 +1403,11 @@
       calendar.refetchEvents();
     });
 
-    document.getElementById("refreshBtn").addEventListener("click", () => {
-      calendar.refetchEvents();
-    });
-
-    /*****************************************************************
-     * Mobile Filters Drawer (layout only; does not touch calendar logic)
-     *****************************************************************/
     const overlay = document.getElementById("filtersOverlay");
     const openBtn = document.getElementById("openFiltersBtn");
     const closeBtn = document.getElementById("closeFiltersBtn");
-    const filtersPanel = document.getElementById("filtersPanel");
-    const drawerBody = document.getElementById("drawerBody");
-
-    const originalParent = filtersPanel.parentElement;
-    const originalNextSibling = filtersPanel.nextElementSibling;
-
-    function useDrawerFilters() {
-      return true; // always keep filters in drawer
-    }
-
-    function ensurePanelLocation() {
-      if (useDrawerFilters()) {
-        if (filtersPanel.parentElement !== drawerBody) {
-          drawerBody.appendChild(filtersPanel);
-        }
-      } else {
-        if (filtersPanel.parentElement !== originalParent) {
-          if (originalNextSibling) originalParent.insertBefore(filtersPanel, originalNextSibling);
-          else originalParent.appendChild(filtersPanel);
-        }
-        overlay.classList.remove("open");
-        overlay.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-      }
-    }
 
     function openDrawer() {
-      ensurePanelLocation();
       overlay.classList.add("open");
       overlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -1306,15 +1427,11 @@
     });
 
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (overlay.classList.contains("open")) closeDrawer();
+      if (e.key === "Escape" && overlay.classList.contains("open")) {
+        closeDrawer();
       }
     });
-
-    window.addEventListener("resize", ensurePanelLocation);
-    ensurePanelLocation();
   </script>
-
 </body>
 
 </html>
